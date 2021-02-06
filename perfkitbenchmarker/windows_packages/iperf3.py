@@ -62,6 +62,9 @@ flags.DEFINE_integer('socket_buffer_size', None,
 flags.DEFINE_integer('iperf3_omit_seconds', 0,
                      'Omit this many seconds from the start of the iperf3 test.')
 
+flags.DEFINE_integer('iperf3_max_segment', 1460,
+                     'Set TCP/SCTP maximum segment size (bytes).')
+
 flags.DEFINE_bool('run_tcp', True,
                   'setting to false will disable the run of the TCP test')
 
@@ -106,13 +109,14 @@ def RunIperf3TCPMultiStream(sending_vm, receiving_vm, use_internal_ip=True):
         socket_buffer=FLAGS.socket_buffer_size)
 
   sender_args = ('--client {ip} --port {port} -t {time} -P {num_streams} -f m '
-                 ' {socket_buffer_arg} -O {omit} > {out_file}').format(
+                 ' {socket_buffer_arg} -O {omit} -M {max} > {out_file}').format(
                      ip=receiver_ip,
                      port=IPERF3_TCP_PORT,
                      time=FLAGS.tcp_stream_seconds,
                      num_streams=FLAGS.tcp_number_of_streams,
                      socket_buffer_arg=socket_buffer_string,
                      omit = FLAGS.iperf3_omit_seconds,
+                     max = FLAGS.iperf3_max_segment,
                      out_file=IPERF3_OUT_FILE)
 
   output = _RunIperf3ServerClientPair(sending_vm, sender_args, receiving_vm)
@@ -201,13 +205,14 @@ def RunIperf3UDPStream(sending_vm, receiving_vm, use_internal_ip=True):
                          FLAGS.max_bandwidth_mb,
                          FLAGS.bandwidth_step_mb):
     sender_args = ('--client {server_ip} --udp -t {duration} -P {num_threads} '
-                   '-b {bandwidth}M -l {buffer_len} -O {omit} > {out_file}'.format(
+                   '-b {bandwidth}M -l {buffer_len} -O {omit} -M {max} > {out_file}'.format(
                        server_ip=receiver_ip,
                        duration=FLAGS.udp_stream_seconds,
                        num_threads=FLAGS.udp_client_threads,
                        bandwidth=bandwidth,
                        buffer_len=FLAGS.udp_buffer_len,
                        omit=FLAGS.iperf3_omit_seconds,
+                       max=FLAGS.iperf3_max_segment,
                        out_file=IPERF3_OUT_FILE))
 
     # the "-1" flag will cause the server to exit after performing a single
@@ -313,7 +318,8 @@ def ParseTCPMultiStreamOutput(results, sending_vm, receiving_vm, num_streams,
         'thread_id': thread_id,
         'internal_ip_used': internal_ip_used,
         'tcp_window_size': FLAGS.socket_buffer_size,
-        'omit_seconds': FLAGS.iperf3_omit_seconds
+        'omit_seconds': FLAGS.iperf3_omit_seconds,
+        'max_segment_size': FLAGS.iperf3_max_segment
     }
     bandwidth = line_data[5]
     units = line_data[6]
@@ -378,6 +384,7 @@ def GetUDPStreamSamples(sending_vm, receiving_vm, results, bandwidth,
       'sending_zone': sending_vm.zone,
       'internal_ip_used': internal_ip_used,
       'omit_seconds': FLAGS.iperf3_omit_seconds,
+      'max_segment_size': FLAGS.iperf3_max_segment,
   }
 
   # Get the percentage of packets lost.
