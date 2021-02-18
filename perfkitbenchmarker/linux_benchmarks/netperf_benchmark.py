@@ -353,7 +353,7 @@ def RunNetperf(vm, benchmark_name, server_ip, num_streams):
   enable_latency_histograms = FLAGS.netperf_enable_histograms or num_streams > 1
   # Throughput benchmarks don't have latency histograms
   enable_latency_histograms = (
-      enable_latency_histograms ands
+      enable_latency_histograms and
       (benchmark_name not in ['TCP_STREAM', 'UDP_STREAM']))
   # Flags:
   # -o specifies keys to include in CSV output.
