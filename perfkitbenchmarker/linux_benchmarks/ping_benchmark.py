@@ -23,6 +23,7 @@ from perfkitbenchmarker import configs
 from absl import flags
 from perfkitbenchmarker import sample
 from perfkitbenchmarker import flag_util
+from perfkitbenchmarker import vm_util
 import re
 import time
 
