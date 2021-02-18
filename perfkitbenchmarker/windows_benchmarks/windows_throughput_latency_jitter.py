@@ -43,7 +43,7 @@ def GetConfig(user_config):
 def Prepare(benchmark_spec):
   psping_benchmark.Prepare(benchmark_spec)
   iperf3_benchmark.Prepare(benchmark_spec)
-  ntttcp_benchmark.Prepare(benchmark_spec)
+  # ntttcp_benchmark.Prepare(benchmark_spec)
 
 
 def Run(benchmark_spec):
@@ -61,7 +61,7 @@ def Run(benchmark_spec):
   results = []
 
   psping_results = []
-  ntttcp_results = []
+  # ntttcp_results = []
   iperf3_results = []
 
 
@@ -72,12 +72,12 @@ def Run(benchmark_spec):
     print(sample)
     sample.metadata['benchmark_name'] = 'psping'
 
-  ntttcp_results = ntttcp_benchmark.Run(benchmark_spec)
-  for sample in ntttcp_results:
-    print("SAMPLE NTTTCP")
-    print(type(sample))
-    print(sample)
-    sample.metadata['benchmark_name'] = 'ntttcp'
+  # ntttcp_results = ntttcp_benchmark.Run(benchmark_spec)
+  # for sample in ntttcp_results:
+  #   print("SAMPLE NTTTCP")
+  #   print(type(sample))
+  #   print(sample)
+  #   sample.metadata['benchmark_name'] = 'ntttcp'
 
   iperf3_results = iperf3_benchmark.Run(benchmark_spec)
   for sample in iperf3_results:
@@ -87,7 +87,7 @@ def Run(benchmark_spec):
     sample.metadata['benchmark_name'] = 'iperf3'
 
 
-  results = results + psping_results + ntttcp_results + iperf3_results
+  results = results + psping_results + iperf3_results # + ntttcp_results
 
   return results
 
