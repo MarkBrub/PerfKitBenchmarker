@@ -1264,7 +1264,13 @@ def RunBenchmarks():
     else:
       spec_sample_tuples = background_tasks.RunParallelProcesses(
           tasks, FLAGS.run_processes, FLAGS.run_processes_delay)
-    benchmark_specs, sample_lists = list(zip(*spec_sample_tuples))
+    benchmark_specs, sample_lists = zip(*spec_sample_tuples)
+
+    for sample_list in sample_lists:
+      for sample in sample_list:
+        if 'benchmark_name' in sample['metadata']:
+          sample['test'] = sample['metadata']['benchmark_name']
+
     for sample_list in sample_lists:
       collector.samples.extend(sample_list)
 
