@@ -113,7 +113,7 @@ OUTPUT_SELECTOR = (
     'TRANSPORT_MSS')
 
 # Command ports are even (id*2), data ports are odd (id*2 + 1)
-PORT_START = 20000
+PORT_START = 10000
 
 REMOTE_SCRIPTS_DIR = 'netperf_test_scripts'
 REMOTE_SCRIPT = 'netperf_test.py'
